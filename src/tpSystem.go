@@ -14,19 +14,21 @@ type Process struct {
 }
 
 func main() {
-	(pid())
+	fmt.Println(pid())
 }
 
-func pid() ([]Process, error) {
+func pid() string {
 	var process []Process
 	f, err := os.Open("/proc")
 	if err != nil {
-		return process, err
+		return "Error 500 , you dont have directory /proc in your linux architecture"
 	}
+
+	// Récupère les sous dossier du dossier ./proc
 	fileInfo, err := f.Readdir(-1)
 	f.Close()
 	if err != nil {
-		return process, err
+		return "Error 500, permission denied, cant open /proc"
 	}
 
 	for _, file := range fileInfo {
@@ -41,7 +43,7 @@ func pid() ([]Process, error) {
 		}
 	}
 
-	return process, nil
+	return display(process)
 
 }
 
@@ -49,11 +51,9 @@ func inspectPidCwd(id string) string {
 
 	file, err := os.Readlink("/proc/" + id + "/cwd")
 
-	path, err := filepath.Abs(file)
-	fmt.Println(path)
-
 	if err == nil {
-		return "/proc/" + id + "/cwd"
+		path, _ := filepath.Abs(file)
+		return path + "/proc/" + id + "/cwd"
 	} else {
 		return "no cwd"
 	}
@@ -61,10 +61,24 @@ func inspectPidCwd(id string) string {
 }
 func inspectPidExe(id string) string {
 
-	_, err := os.Readlink("/proc/" + id + "/exe")
+	file, err := os.Readlink("/proc/" + id + "/exe")
 	if err == nil {
-		return "/proc/" + id + "/exe\n"
+		path, _ := filepath.Abs(file)
+		return path + "/proc/" + id + "/exe\n"
 	} else {
 		return "no exe\n"
 	}
+}
+
+func display(process []Process) string {
+	var show string
+	for i := 0; i < len(process); i++ {
+		pid := "PID : " + process[i].Pid
+		cwd := "CWD : " + process[i].Cwd
+		exe := "EXE : " + process[i].Exe
+		show = show + pid + " |  " + cwd + "  | " + exe + "\n"
+
+	}
+	return show
+
 }
