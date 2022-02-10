@@ -195,7 +195,7 @@
           <h2>Update here</h2>
         </div>
         <div class="info">
-          <input  type="text" name="Id" placeholder="Id">
+          <select name="Id" id="selectIdUpdate"></select>
           <input class="fname" type="text" name="Name" placeholder="Name">
           <input type="text" name="InPark" placeholder="InPark">
           <input type="text" name="Place" placeholder="Place">
@@ -203,7 +203,7 @@
        
         </div>
        
-        <button type="submit">Submit</button>
+        <button type="submit" onclick="alert('Attraction Updated');">Submit</button>
       </form>
 
       <form id="formDelete" method="POST" action="http://127.0.0.1:8001/delete" target="dummyframe">
@@ -212,11 +212,12 @@
           <h2>Delete here</h2>
         </div>
         <div class="info">
-          <input  type="text" name="Id" placeholder="Id">
+          <select name="Id" id="Id"></select>
+        
        
         </div>
        
-        <button type="submit">Submit</button>
+        <button type="submit" onclick="alert('Attraction Deleted');">Submit</button>
       </form>
     </div>
   </body>
@@ -233,17 +234,101 @@
      document.getElementById("formDelete").style.display = 'none'
 
     }
-    function showUpdateForm(){
+  
+  function showUpdateForm(){
       document.getElementById("formCreate").style.display = 'none'
       document.getElementById("formDelete").style.display = 'none'
       document.getElementById("listRoller").style.display = 'none'
      document.getElementById("formUpdate").style.display = 'block'
+
+     
+
+     let data;
+     $.ajax({
+        type: "GET",
+        url: 'http://127.0.0.1:8001/get',
+        async:true,
+        data : data,
+        dataType : 'json',   //you may use jsonp for cross origin request
+        crossDomain:true,
+        success: function(data, status, xhr) {
+          var tbody = $('#tbodyTable'); 
+          var selectId = $('#selectIdUpdate');
+          tbody.empty();
+          data.forEach(element => {
+            let option = document.createElement("option");
+            option.value = element.Id
+            option.innerHTML = element.Id
+            let tr = document.createElement("tr");
+            let tdID = document.createElement("td");
+            let tdName = document.createElement("td");
+            let tdPlace = document.createElement("td");
+            let tdManufacturer = document.createElement("td");
+            let tdInPark = document.createElement("td");
+            tdID.innerHTML = element.Id
+            tdPlace.innerHTML = element.Place
+            tdManufacturer.innerHTML = element.Manufacturer
+            tdInPark.innerHTML = element.InPark
+            tdName.innerHTML = element.Name
+
+            tr.append(tdID,tdName,tdPlace,tdInPark,tdManufacturer)
+            selectId.append(option)
+            tbody.append(tr)
+          });
+         
+ 
+        }, error: function(data, status, xhr) {
+            console.log(data)
+            }
+     
+    });
 }
+
 function showDeleteForm(){
       document.getElementById("formCreate").style.display = 'none'
      document.getElementById("formUpdate").style.display = 'none'
      document.getElementById("listRoller").style.display = 'none'
      document.getElementById("formDelete").style.display = 'block'
+
+     let data;
+   $.ajax({
+        type: "GET",
+        url: 'http://127.0.0.1:8001/get',
+        async:true,
+        data : data,
+        dataType : 'json',   //you may use jsonp for cross origin request
+        crossDomain:true,
+        success: function(data, status, xhr) {
+          var tbody = $('#tbodyTable'); 
+          var selectId = $('#Id');
+          tbody.empty();
+          data.forEach(element => {
+            let option = document.createElement("option");
+            option.value = element.Id
+            option.innerHTML = element.Id
+            let tr = document.createElement("tr");
+            let tdID = document.createElement("td");
+            let tdName = document.createElement("td");
+            let tdPlace = document.createElement("td");
+            let tdManufacturer = document.createElement("td");
+            let tdInPark = document.createElement("td");
+            tdID.innerHTML = element.Id
+            tdPlace.innerHTML = element.Place
+            tdManufacturer.innerHTML = element.Manufacturer
+            tdInPark.innerHTML = element.InPark
+            tdName.innerHTML = element.Name
+
+            tr.append(tdID,tdName,tdPlace,tdInPark,tdManufacturer)
+            selectId.append(option)
+            tbody.append(tr)
+          });
+         
+ 
+        }, error: function(data, status, xhr) {
+            console.log(data)
+            }
+     
+    });
 }
 function showList(){
 
@@ -262,9 +347,12 @@ function showList(){
         crossDomain:true,
         success: function(data, status, xhr) {
           var tbody = $('#tbodyTable'); 
+          var selectId = $('#Id');
           tbody.empty();
           data.forEach(element => {
-           
+            let option = document.createElement("option");
+            option.value = element.Id
+            option.innerHTML = element.Id
             let tr = document.createElement("tr");
             let tdID = document.createElement("td");
             let tdName = document.createElement("td");
@@ -278,7 +366,7 @@ function showList(){
             tdName.innerHTML = element.Name
 
             tr.append(tdID,tdName,tdPlace,tdInPark,tdManufacturer)
-
+            selectId.append(option)
             tbody.append(tr)
           });
          
