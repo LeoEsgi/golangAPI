@@ -9,6 +9,7 @@ import (
 	"strconv"
 )
 
+// structure Attraction qui vas nous permettre de stocker nos objets
 type Attraction struct {
 	Id           int    `json:"Id"`
 	Name         string `json:"Name"`
@@ -17,24 +18,29 @@ type Attraction struct {
 	Manufacturer string `json:"Manufacturer"`
 }
 
+// Permet d'exporter en json l'ensemble de nos attractions
+
 func saveInfile(attr []Attraction) {
 
+	var data []Attraction
+
+	// boucle sur les différents élement du tableau
+
 	for i := 0; i < len(attr); i++ {
-		fmt.Print("hello")
-		data := Attraction{
+
+		data = append(data, Attraction{
 
 			Id:           attr[i].Id,
 			Name:         attr[i].Name,
 			InPark:       attr[i].InPark,
 			Place:        attr[i].Place,
 			Manufacturer: attr[i].Manufacturer,
-		}
-
-		file, _ := json.MarshalIndent(data, "", " ")
-
-		_ = ioutil.WriteFile("test.json", file, 0644)
+		})
 
 	}
+
+	file, _ := json.MarshalIndent(data, "", " ")
+	_ = ioutil.WriteFile("test.json", file, 0644)
 }
 
 func delete(id string, attr []Attraction) {

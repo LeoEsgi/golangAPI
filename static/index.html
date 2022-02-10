@@ -145,6 +145,7 @@
     </style>
   </head>
   <body>
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
       <div class="left-part">
         <img src="roller-coaster-svgrepo-com.svg"   height="127px"
         width="150px">
@@ -172,7 +173,7 @@
       </tbody>
       
       </table>
-      <form  id="formCreate" method="POST" action="http://127.0.0.1:8001/create">
+      <form  id="formCreate" method="POST" action="http://127.0.0.1:8001/create" target="dummyframe" >
         <div class="title">
           <i class="fas fa-pencil-alt"></i> 
           <h2>Create here</h2>
@@ -185,10 +186,10 @@
        
         </div>
        
-        <button type="submit">Submit</button>
+        <button type="submit" onclick="alert('Attraction Created');">Submit</button>
       </form>
 
-      <form id="formUpdate" method="POST" action="http://127.0.0.1:8001/patch">
+      <form id="formUpdate" method="POST" action="http://127.0.0.1:8001/patch" target="dummyframe">
         <div class="title">
           <i class="fas fa-pencil-alt"></i> 
           <h2>Update here</h2>
@@ -202,10 +203,10 @@
        
         </div>
        
-        <button type="submit" onclick="window.location.href = 'http://127.0.0.1:8001/'">Submit</button>
+        <button type="submit">Submit</button>
       </form>
 
-      <form id="formDelete" method="POST" action="http://127.0.0.1:8001/delete">
+      <form id="formDelete" method="POST" action="http://127.0.0.1:8001/delete" target="dummyframe">
         <div class="title">
           <i class="fas fa-pencil-alt"></i> 
           <h2>Delete here</h2>
@@ -215,13 +216,43 @@
        
         </div>
        
-        <button type="submit" href="/">Submit</button>
+        <button type="submit">Submit</button>
       </form>
     </div>
   </body>
   <script>
-    $(document).ready(function(){
- let data;
+   
+
+
+   
+   function showCreateForm(){
+
+     document.getElementById("formCreate").style.display = 'block'
+     document.getElementById("formUpdate").style.display = 'none'
+     document.getElementById("listRoller").style.display = 'none'
+     document.getElementById("formDelete").style.display = 'none'
+
+    }
+    function showUpdateForm(){
+      document.getElementById("formCreate").style.display = 'none'
+      document.getElementById("formDelete").style.display = 'none'
+      document.getElementById("listRoller").style.display = 'none'
+     document.getElementById("formUpdate").style.display = 'block'
+}
+function showDeleteForm(){
+      document.getElementById("formCreate").style.display = 'none'
+     document.getElementById("formUpdate").style.display = 'none'
+     document.getElementById("listRoller").style.display = 'none'
+     document.getElementById("formDelete").style.display = 'block'
+}
+function showList(){
+
+     document.getElementById("formCreate").style.display = 'none'
+     document.getElementById("formUpdate").style.display = 'none'
+     document.getElementById("formDelete").style.display = 'none'
+     document.getElementById("listRoller").style.display = 'block'
+
+     let data;
    $.ajax({
         type: "GET",
         url: 'http://127.0.0.1:8001/get',
@@ -231,8 +262,8 @@
         crossDomain:true,
         success: function(data, status, xhr) {
           var tbody = $('#tbodyTable'); 
+          tbody.empty();
           data.forEach(element => {
-            console.log(element)
            
             let tr = document.createElement("tr");
             let tdID = document.createElement("td");
@@ -257,36 +288,6 @@
             }
      
     });
-    });
-
-
-
-   
-   function showCreateForm(){
-
-     document.getElementById("formCreate").style.display = 'block'
-     document.getElementById("formUpdate").style.display = 'none'
-     document.getElementById("listRoller").style.display = 'none'
-     document.getElementById("formDelete").style.display = 'none'
-
-    }
-    function showUpdateForm(){
-      document.getElementById("formCreate").style.display = 'none'
-      document.getElementById("formDelete").style.display = 'none'
-      document.getElementById("listRoller").style.display = 'none'
-     document.getElementById("formUpdate").style.display = 'block'
-}
-function showDeleteForm(){
-      document.getElementById("formCreate").style.display = 'none'
-     document.getElementById("formUpdate").style.display = 'none'
-     ocument.getElementById("listRoller").style.display = 'none'
-     document.getElementById("formDelete").style.display = 'block'
-}
-function showList(){
-  document.getElementById("formCreate").style.display = 'none'
-     document.getElementById("formUpdate").style.display = 'none'
-     document.getElementById("formDelete").style.display = 'none'
-     document.getElementById("listRoller").style.display = 'block'
 }
 
 function generateFile(){
